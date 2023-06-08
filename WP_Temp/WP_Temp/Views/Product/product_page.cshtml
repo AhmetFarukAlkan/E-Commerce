@@ -1,0 +1,293 @@
+@using Newtonsoft.Json.Serialization;
+
+@{
+    string userName = Context.Request.Cookies["UserName"];
+    string userEmail = Context.Request.Cookies["UserEmail"];
+}
+
+<!doctype html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- MDB -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.css" rel="stylesheet" />
+    <link href="~/css/product_page.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.js"></script>
+
+
+</head>
+
+<body>
+
+
+
+    <div class="main mt-5 pt-5">
+        <div class="row">
+            <div class="col-12 col-md-8 photoArea">
+                <div class="photo">
+                    <!-- Carousel wrapper -->
+                    <div id="carouselBasicExample" class="carousel slide carousel-fade" data-mdb-ride="carousel">
+
+
+                        <!-- Inner -->
+                        <div class="carousel-inner">
+                            <!-- Single item -->
+
+                            @foreach (var image in Model.Images)
+                            {
+                                <div class="carousel-item active">
+                                    <img src="@image.ImageUrl" class="d-block m-auto" />
+                                </div>
+                            }
+
+
+
+                        </div>
+                        <!-- Inner END -->
+                        <!-- Controls -->
+                        <button class="carousel-control-prev" style="color: black;" type="button"
+                                data-mdb-target="#carouselBasicExample" data-mdb-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" style="color: black;" type="button"
+                                data-mdb-target="#carouselBasicExample" data-mdb-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <!-- Indicators -->
+
+                    <!--
+                    <div class="carousel-indicator">
+                    @foreach (var image in Model.Images)
+                    {
+                                <div type="button" data-mdb-target="#carouselBasicExample" data-mdb-slide-to="0" class="active"
+                                     aria-current="true" aria-label="Slide 1">
+                                    <img src="@image.ImageUrl"
+                                         alt="">
+                                </div>
+                    }
+                    </div>
+                    -->
+
+
+
+                    <!-- Carousel wrapper -->
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-12 col-md-4  general_pro">
+                <div class="product_header container">
+                    <label class="text-center title">
+                        <span class="fw-bold"> @Model.Marka</span> @Model.Baslik
+                    </label>
+                </div>
+
+                <div class="product_properties container">
+                    <p class="text-start fw-bold">
+                        Fiyat: @Model.Fiyat
+                    </p>
+
+
+                    <div class="description_text div row " style="font-size: .6rem; height: auto; background-color: inherit;">
+
+
+                        @{
+                            string jsonString = Model.Detaylar;
+
+                            var jsonDocument = System.Text.Json.JsonDocument.Parse(jsonString);
+
+                            var jsonObject = jsonDocument.RootElement;
+                            var enumerator = jsonObject.EnumerateObject().GetEnumerator();
+
+                            // İlk 8 öğeyi ekrana yazdır
+                            int count = 0;
+                            while (enumerator.MoveNext() && count < 4)
+                            {
+                                var property = enumerator.Current;
+                                string key = property.Name;
+                                string value = property.Value.ToString();
+
+                                count++;
+
+                                <div class="col-12">
+                                    <div class="properties row">
+                                        <p class="col-6 m-auto">@key</p>
+                                        <p class="col-6 m-auto text-center">@value</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+                    <p class="text-end m-0">
+                        @Model.Degerlendirme
+                    </p>
+                    <p class="text-end m-0">
+                        Favori
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-suit-heart-fill" viewBox="0 0 16 16" style="color: var(--mdb-danger)">
+                            <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" />
+                        </svg>
+                        @Model.BegeniSayisi
+                    </p>
+
+                </div>
+
+                <div class="buy container row">
+                    <!--        <label>Satın Al</label>-->
+
+                    @if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(userEmail))
+                    {
+                        <a href="addChart/Produc=@Model.Id&user-email=@userEmail" type="button" class="btn btn-info col">
+                            Sepete Ekle <i class="bi bi-bag-check"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Content("~/login")" type="button" class="btn btn-info col">
+                            Sepete Ekle <i class="bi bi-bag-check"></i>
+                        </a>
+                    }
+
+
+
+                    @*<button type="button" class="btn btn-success col">Hızlı Al <i class="bi bi-forward-fill"></i></button>*@
+                </div>
+            </div>
+        </div>
+
+        <div class="recommended row gx-5">
+            <h3 class="text-center">Benzer Ürünler</h3>
+            <div class="recommendedItem col-lg col-md-2 col-sm-4 ">
+                <img src="https://cdn.dsmcdn.com/ty542/product/media/images/20220928/9/180698089/581528882/1/1_org_zoom.jpg">
+            </div>
+            <div class="recommendedItem col-lg col-md-2 col-sm-4 ">
+                <img src="https://cdn.dsmcdn.com/ty542/product/media/images/20220928/9/180698089/581528882/1/1_org_zoom.jpg">
+            </div>
+            <div class="recommendedItem col-lg col-md-2 col-sm-4 ">
+                <img src="https://cdn.dsmcdn.com/ty542/product/media/images/20220928/9/180698089/581528882/1/1_org_zoom.jpg">
+            </div>
+            <div class="recommendedItem col-lg col-md-2 col-sm-4 ">
+                <img src="https://cdn.dsmcdn.com/ty542/product/media/images/20220928/9/180698089/581528882/1/1_org_zoom.jpg">
+            </div>
+            <div class="recommendedItem col-lg col-md-2 col-sm-4 ">
+                <img src="https://cdn.dsmcdn.com/ty542/product/media/images/20220928/9/180698089/581528882/1/1_org_zoom.jpg">
+            </div>
+            <div class="recommendedItem col-lg col-md-2 col-sm-4 ">
+                <img src="https://cdn.dsmcdn.com/ty542/product/media/images/20220928/9/180698089/581528882/1/1_org_zoom.jpg">
+            </div>
+        </div>
+
+
+        <div class="description row">
+            <div class="col-12">
+                <h3 class="text-center"> Ürün Açıklaması </h3>
+            </div>
+            <div class="d-none col-lg-2 d-lg-inline">
+                <img class="img-fluid" src="@Model.Images[0].ImageUrl" alt="">
+            </div>
+            <div class="col-12 col-lg-10 aciklama">
+                <p>
+                    @Model.Aciklama;
+                </p>
+            </div>
+        </div>
+        
+
+        <div class="description">
+
+            <div class="description_text div row ">
+                <label class="descriptionHeader container text-center">Özellikler</label>
+
+                @{
+                    jsonString = Model.Detaylar;
+
+                    jsonDocument = System.Text.Json.JsonDocument.Parse(jsonString);
+
+                    jsonObject = jsonDocument.RootElement;
+                    enumerator = jsonObject.EnumerateObject().GetEnumerator();
+
+                    // İlk 8 öğeyi ekrana yazdır
+                    while (enumerator.MoveNext())
+                    {
+                        var property = enumerator.Current;
+                        string key = property.Name;
+                        string value = property.Value.ToString();
+
+                        count++;
+
+                        <div class="col-12 col-md-6 ">
+                            <div class="properties row">
+                                <p class="col-6">@key</p>
+                                <p class="col-6 text-end fw-bold">@value</p>
+                            </div>
+                        </div>
+                    }
+                }
+
+
+
+
+            </div>
+
+            <!--    <div class="col-4 description_photo">-->
+            <!--      photo-->
+            <!--    </div>-->
+
+        </div>
+    </div>
+
+
+  <!-- MDB -->
+</body>
+
+</html>
+
+<script setup lang="ts">
+
+  const fileName = location.pathname.split('/').pop();
+  function isActive(linkName) {
+    if (fileName === linkName) {
+      return " active"
+    }
+    else return ""
+  }
+  function navbarMobile() {
+    const nCollapsible = document.body.querySelector("#mainNavbar");
+  
+    if (!nCollapsible) {
+      return;
+    }
+    if (window.scrollY === 0) {
+      nCollapsible.classList.remove("navbar-mobile");
+    } else {
+      nCollapsible.classList.add("navbar-mobile");
+    }
+  }
+  navbarMobile();
+  document.addEventListener("scroll", navbarMobile);
+  
+  
+  </script>
+  

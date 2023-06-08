@@ -1,0 +1,91 @@
+@using WP_Temp.Models;
+@using Microsoft.EntityFrameworkCore;
+@model List<Product>
+
+
+@{
+    ViewData["Title"] = "Home Page";
+    int id = 0;
+}
+
+
+<!DOCTYPE html>
+
+<head>
+    <title>Marun E-commerce</title>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="Lzg8xUSxO_Tvqnr26CCyv9FV29tXwhBxyukXVU_Nmv8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <link href="~/css/urun_katolog.css" rel="stylesheet" />
+</head>
+<body>
+    <section>
+        <div class="container mt-5">
+            <!-- Main wrapper -->
+            <div class="row p-2" style="background-color: #ececec">
+                <!-- Categories -->
+
+@*                <div class="filter col-2 p-2 rounded ">
+                    <h4 class="text-center">Filtrele</h4>
+
+                </div>*@
+                <!-- Products -->
+                <div class="col-12 row">
+                    @*<div class="col-12">
+                        <button class="btn"><h5>Sırala</h5></button>
+                    </div>*@
+                    @* <%
+                    string GetImageUrl()
+                    {
+
+                    string imageUrl = "resim.jpg";
+                    return imageUrl;
+                    }
+                    %>*@
+
+
+                    @foreach (var product in Model)
+                    {
+                        <!--<a asp-action="ProductDetails" asp-route-id="@product.Id" class="col-lg-3 col-md-4 col-sm-6 text-decoration-none">
+                        -->
+                        <a href="/Product/Get/@product.Id" class="col-lg-3 col-md-4 col-sm-6 text-decoration-none">
+                            <div class="card">
+
+                                @if (product.Images.Count > 0)
+                                {
+                                    <img src="@product.Images.First().ImageUrl"
+                                         alt="" class="img-fluid px-4">
+                                }
+
+                                <div class="aciklama">
+                                    <h6 class="text-center">@product.Marka</h6>
+                                    <div class="wrapper px-2">
+                                        <p class="demo-1">
+                                            @product.Baslik
+                                        </p>
+                                    </div>
+                                    <div class="card-bottom d-flex flex-row">
+                                        <div class="d-flex flex-column">
+                                            <!--                    <p>1232 favori</p>-->
+                                            <p class="price text-success">@product.Fiyat</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </a>
+
+                    }
+
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>
